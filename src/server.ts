@@ -9,6 +9,7 @@ import { routes } from './routes';
 import { logger } from './helpers/logger';
 import { getEnv, getServerPort } from './helpers/env.helper';
 import { globalErrorHandlerMiddleware } from './middlewares/global-error-handler.middleware';
+import { rabbitBoss } from './services/rabbit-boss';
 
 const app = express();
 app.use(cors());
@@ -25,12 +26,18 @@ app.get('/', function (req, res) {
 const port = getServerPort();
 
 Promise.all([
+  rabbitBoss.connect(),
   //
   // connectToDb(process.env.DB_URL as string),
-]).then(() => {
-  app.listen(port, function () {
-    const serverStartedMessage = `Server listening on port ${port}!`;
-    logger.info(`env - ${getEnv()}`);
-    logger.info(serverStartedMessage);
+])
+  .then(() => {
+    app.listen(port, function () {
+      const serverStartedMessage = `Server listening on port ${port}!`;
+      logger.info(`env - ${getEnv()}`);
+      logger.info(serverStartedMessage);
+    });
+  })
+  .catch((err) => {
+    logger.error(err);
+    process.exit(1);
   });
-});
