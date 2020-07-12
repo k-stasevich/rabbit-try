@@ -1,8 +1,9 @@
-import express = require('express');
+import express from 'express';
 import dotenv from 'dotenv';
 import * as bodyParser from 'body-parser';
 import cors from 'cors';
 import path from 'path';
+
 dotenv.config();
 
 import { routes } from './routes';

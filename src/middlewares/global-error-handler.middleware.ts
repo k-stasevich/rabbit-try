@@ -15,7 +15,7 @@ import { response } from '../helpers/response.helper';
  *
  * And be sure that this will be handled by globalErrorHandlerMiddleware
  */
-export const asyncMiddleware = fn => (req, res, next) => {
+export const asyncMiddleware = (fn: any) => (req: Request, res: Response, next: NextFunction) => {
   Promise.resolve(fn(req, res, next)).catch(next);
 };
 
@@ -24,7 +24,7 @@ export const globalErrorHandlerMiddleware = (
   req: Request,
   res: Response,
   next: NextFunction,
-) => {
+): void => {
   const query = JSON.stringify(req.query);
   const body = JSON.stringify(req.body);
   logger.error(`InternalServerError ${req.method} ${req.path} query=${query}; body=${body}; `, err);
